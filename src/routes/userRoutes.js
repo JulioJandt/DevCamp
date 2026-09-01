@@ -1,17 +1,18 @@
 import express from 'express';
 import {
-getAllUsers,
-getUserById,
-createUser,
-updateUser,
-deleteUser
+  lerUsuarios,
+  lerUsuarioPorId,
+  addUsuario,
+  attUsuario,
+  delUsuario
 } from '../controllers/userController.js';
-const router = express.Router();
-// Definindo as rotas
-router.get('/', getAllUsers);
 
-router.get('/:id', getUserById);
-router.post('/', createUser);
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+const router = express.Router();
+
+router.get('/', lerUsuarios);
+router.get('/:id', lerUsuarioPorId);
+router.post('/', addUsuario);
+router.put('/:id', attUsuario);
+router.delete('/:id', delUsuario);
+
 export default router;
