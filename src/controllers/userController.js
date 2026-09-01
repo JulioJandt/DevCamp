@@ -1,6 +1,6 @@
 let users = [
-  { id: 1, nome: 'FalleN', email: 'fallen@cs.com', senha: '123', tipo: 'organizador' },
-  { id: 2, nome: 'Aspas', email: 'aspas@val.com', senha: '456', tipo: 'capitao' }
+  { id: 1, nome: 'FalleN', email: 'fallen@cs.com', senha: '123' },
+  { id: 2, nome: 'Aspas', email: 'aspas@val.com', senha: '456' }
 ];
 
 // GET: Buscar todos
@@ -21,15 +21,22 @@ export const lerUsuarioPorId = (req, res) => {
 
 // POST: Criar 
 export const addUsuario = (req, res) => {
-  const { nome, email, senha, tipo } = req.body;
+  const { nome, nick, email, senha} = req.body;
 
-  if (!nome || !email || !senha || !tipo) {
+  if (!nome || !nick || !email || !senha) {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios!' });
+  }
+
+  // validação de e-mail único
+  const emailJaExiste = users.find(u => u.email === email);
+
+  if (emailJaExiste) {
+    return res.status(400).json({ message: 'Este e-mail já está cadastrado no sistema!' });
   }
 
   const newUser = {
     id: users.length > 0 ? users[users.length - 1].id + 1 : 1, 
-    nome, email, senha, tipo 
+    nome, nick, email, senha
   };
 
   users.push(newUser); 
