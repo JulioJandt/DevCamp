@@ -1,5 +1,6 @@
 import express from 'express';
 import userRoutes from './src/routes/userRoutes.js';
+import teamRoutes from './src/routes/teamRoutes.js';
 const app = express();
 
 const port = 3000;
@@ -7,6 +8,7 @@ const port = 3000;
 app.use(express.json());
 // Rotas
 app.use('/users', userRoutes);
+app.use('/teams', teamRoutes);
 // Rota inicial
 app.get('/', (req, res) => {
 res.send('API com Express funcionando!');
