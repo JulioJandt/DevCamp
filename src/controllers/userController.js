@@ -46,17 +46,25 @@ export const addUsuario = (req, res) => {
 // PUT: Atualizar
 export const attUsuario = (req, res) => {
   const id = parseInt(req.params.id);
-  const { nome, email, senha, tipo } = req.body;
+  const { nome, nick, email, senha, tipo } = req.body;
   const index = users.findIndex(u => u.id === id);
 
   if (index === -1) {
     return res.status(404).json({ message: 'Usuário não encontrado' });
   }
 
-  users[index] = { id, nome, email, senha, tipo };
+  // mantem os dados antigos caso não sejam fornecidos novos valores
+  users[index] = { 
+    id, 
+    nome: nome || users[index].nome, 
+    nick: nick || users[index].nick, // Nick salvo!
+    email: email || users[index].email, 
+    senha: senha || users[index].senha, 
+    tipo: tipo || users[index].tipo 
+  };
+  
   res.json(users[index]);
 };
-
 // DELETE: Deletar
 export const delUsuario = (req, res) => {
   const id = parseInt(req.params.id);

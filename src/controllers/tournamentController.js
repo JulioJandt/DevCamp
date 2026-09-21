@@ -1,5 +1,3 @@
-import crypto from 'crypto';
-
 let bdTorneios = [];
 
 export const addTorneio = (req, res) => {
@@ -11,7 +9,7 @@ export const addTorneio = (req, res) => {
     }
 
     const novoTorneio = {
-      id: crypto.randomUUID(),
+      id: bdTorneios.length > 0 ? bdTorneios[bdTorneios.length - 1].id + 1 : 1, // Lógica do ID corrigida
       nome,
       jogo,
       status: status || 'Aberto',
@@ -35,8 +33,8 @@ export const lerTorneios = (req, res) => {
 
 export const inscreverEquipe = (req, res) => {
   try {
-    const { id } = req.params;
-    const { idEquipe } = req.body; // Mudei de teamId para idEquipe
+    const id = parseInt(req.params.id); // Convertido para Int
+    const { idEquipe } = req.body;
 
     if (!idEquipe) {
       return res.status(400).json({ erro: 'O ID da equipe é obrigatório.' });
@@ -61,7 +59,7 @@ export const inscreverEquipe = (req, res) => {
 
 export const attTorneio = (req, res) => {
   try {
-    const { id } = req.params;
+    const id = parseInt(req.params.id); // Convertido para Int
     const { nome, jogo, status } = req.body;
 
     const index = bdTorneios.findIndex(t => t.id === id);
@@ -86,7 +84,7 @@ export const attTorneio = (req, res) => {
 
 export const delTorneio = (req, res) => {
   try {
-    const { id } = req.params;
+    const id = parseInt(req.params.id); // Convertido para Int
     const index = bdTorneios.findIndex(t => t.id === id);
 
     if (index === -1) {
