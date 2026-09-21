@@ -116,3 +116,10 @@ export const removeJogador = (req, res) => {
   team.jogadores.splice(index, 1);
   res.json(team);
 };
+//atualizar pontos após partida
+export const atualizarPontos = (timeId, pontosGanhos) => {
+  const team = teams.find(t => t.id === timeId);
+  if (team) {
+    team.pontos += pontosGanhos;
+  }
+};
