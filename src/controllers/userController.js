@@ -53,7 +53,7 @@ export const attUsuario = (req, res) => {
     return res.status(404).json({ message: 'Usuário não encontrado' });
   }
 
-  // mantem o nick salvo se não for fornecido um novo
+  // mantem os dados antigos caso não sejam fornecidos novos valores
   users[index] = { 
     id, 
     nome: nome || users[index].nome, 
