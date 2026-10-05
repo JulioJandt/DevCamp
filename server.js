@@ -3,6 +3,7 @@ import userRoutes from './src/routes/userRoutes.js';
 import teamRoutes from './src/routes/teamRoutes.js';
 import matchRoutes from './src/routes/matchRoutes.js';
 import tournamentRoutes from './src/routes/tournamentRoutes.js';
+import gameRoutes from './src/routes/gameRoutes.js';
 
 const app = express();
 const port = 3000;
@@ -15,6 +16,7 @@ app.use('/users', userRoutes);
 app.use('/teams', teamRoutes);
 app.use('/matches', matchRoutes); 
 app.use('/tournaments', tournamentRoutes); 
+app.use('/games', gameRoutes);
 
 // Rota inicial
 app.get('/', (req, res) => {
