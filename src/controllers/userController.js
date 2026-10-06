@@ -1,4 +1,4 @@
-let users = [
+export let users = [
   { id: 1, nome: 'FalleN', email: 'fallen@cs.com', senha: '123' },
   { id: 2, nome: 'Aspas', email: 'aspas@val.com', senha: '456' }
 ];
