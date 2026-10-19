@@ -1,0 +1,403 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-19T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_devcamp",
+      "_type": "workspace",
+      "name": "DevCamp - Gestão de Torneios",
+      "description": "Coleção com todas as rotas da API (auth, users, teams, matches, tournaments, games)",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_devcamp",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "token": ""
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "token"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1
+    },
+
+    { "_id": "fld_auth", "_type": "request_group", "parentId": "wrk_devcamp", "name": "Auth", "description": "", "metaSortKey": 1 },
+    { "_id": "fld_users", "_type": "request_group", "parentId": "wrk_devcamp", "name": "Users", "description": "", "metaSortKey": 2 },
+    { "_id": "fld_teams", "_type": "request_group", "parentId": "wrk_devcamp", "name": "Teams", "description": "", "metaSortKey": 3 },
+    { "_id": "fld_matches", "_type": "request_group", "parentId": "wrk_devcamp", "name": "Matches", "description": "", "metaSortKey": 4 },
+    { "_id": "fld_tournaments", "_type": "request_group", "parentId": "wrk_devcamp", "name": "Tournaments", "description": "", "metaSortKey": 5 },
+    { "_id": "fld_games", "_type": "request_group", "parentId": "wrk_devcamp", "name": "Games", "description": "", "metaSortKey": 6 },
+
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "description": "Gera um token JWT. O token da resposta é salvo automaticamente na variável 'token' do environment (script After Response).",
+      "method": "POST",
+      "url": "{{ _.base_url }}/login",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"fallen@cs.com\",\n  \"senha\": \"123\"\n}"
+      },
+      "authentication": { "type": "none" },
+      "afterResponseScript": "const body = insomnia.response.json();\nif (body && body.token) {\n  insomnia.environment.set('token', body.token);\n}",
+      "metaSortKey": 1
+    },
+
+    {
+      "_id": "req_users_list",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Listar usuários",
+      "method": "GET",
+      "url": "{{ _.base_url }}/users",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_users_get",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Buscar usuário por ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/users/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_users_create",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Criar usuário",
+      "method": "POST",
+      "url": "{{ _.base_url }}/users",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Novo Jogador\",\n  \"nick\": \"novo_nick\",\n  \"email\": \"novo@exemplo.com\",\n  \"senha\": \"123456\"\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_users_update",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Atualizar usuário",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/users/1",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"FalleN\",\n  \"nick\": \"fallen\",\n  \"email\": \"fallen@cs.com\",\n  \"senha\": \"123\",\n  \"tipo\": \"jogador\"\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_users_delete",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Remover usuário",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/users/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 5
+    },
+
+    {
+      "_id": "req_teams_list",
+      "_type": "request",
+      "parentId": "fld_teams",
+      "name": "Listar times (ranking)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/teams",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_teams_get",
+      "_type": "request",
+      "parentId": "fld_teams",
+      "name": "Buscar time por ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/teams/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_teams_create",
+      "_type": "request",
+      "parentId": "fld_teams",
+      "name": "Fundar time",
+      "method": "POST",
+      "url": "{{ _.base_url }}/teams",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Sentinels\",\n  \"capitaoId\": 1\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_teams_update",
+      "_type": "request",
+      "parentId": "fld_teams",
+      "name": "Atualizar time",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/teams/1",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"FURIA Esports\",\n  \"capitaoId\": 1\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_teams_delete",
+      "_type": "request",
+      "parentId": "fld_teams",
+      "name": "Desfazer time",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/teams/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 5
+    },
+    {
+      "_id": "req_teams_add_jogador",
+      "_type": "request",
+      "parentId": "fld_teams",
+      "name": "Adicionar jogador na line-up",
+      "method": "POST",
+      "url": "{{ _.base_url }}/teams/1/jogadores",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jogadorId\": 2\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 6
+    },
+    {
+      "_id": "req_teams_remove_jogador",
+      "_type": "request",
+      "parentId": "fld_teams",
+      "name": "Remover jogador da line-up",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/teams/1/jogadores/2",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 7
+    },
+
+    {
+      "_id": "req_matches_list",
+      "_type": "request",
+      "parentId": "fld_matches",
+      "name": "Listar partidas",
+      "method": "GET",
+      "url": "{{ _.base_url }}/matches",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_matches_list_by_tournament",
+      "_type": "request",
+      "parentId": "fld_matches",
+      "name": "Listar partidas por torneio",
+      "method": "GET",
+      "url": "{{ _.base_url }}/matches",
+      "parameters": [{ "name": "torneioId", "value": "1" }],
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_matches_get",
+      "_type": "request",
+      "parentId": "fld_matches",
+      "name": "Buscar partida por ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/matches/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_matches_create",
+      "_type": "request",
+      "parentId": "fld_matches",
+      "name": "Gerar confronto",
+      "method": "POST",
+      "url": "{{ _.base_url }}/matches",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"torneioId\": 1,\n  \"time1Id\": 1,\n  \"time2Id\": 2\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_matches_placar",
+      "_type": "request",
+      "parentId": "fld_matches",
+      "name": "Atualizar placar",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/matches/1/placar",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"placarTime1\": 2,\n  \"placarTime2\": 1\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 5
+    },
+    {
+      "_id": "req_matches_delete",
+      "_type": "request",
+      "parentId": "fld_matches",
+      "name": "Cancelar partida",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/matches/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 6
+    },
+
+    {
+      "_id": "req_tournaments_list",
+      "_type": "request",
+      "parentId": "fld_tournaments",
+      "name": "Listar torneios",
+      "method": "GET",
+      "url": "{{ _.base_url }}/tournaments",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_tournaments_create",
+      "_type": "request",
+      "parentId": "fld_tournaments",
+      "name": "Criar torneio",
+      "method": "POST",
+      "url": "{{ _.base_url }}/tournaments",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Copa DevCamp\",\n  \"jogo\": \"Counter-Strike 2\",\n  \"status\": \"Aberto\"\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_tournaments_inscrever",
+      "_type": "request",
+      "parentId": "fld_tournaments",
+      "name": "Inscrever equipe",
+      "method": "POST",
+      "url": "{{ _.base_url }}/tournaments/1/inscrever",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"idEquipe\": 1\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_tournaments_update",
+      "_type": "request",
+      "parentId": "fld_tournaments",
+      "name": "Atualizar torneio",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/tournaments/1",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Copa DevCamp 2026\",\n  \"jogo\": \"Counter-Strike 2\",\n  \"status\": \"Em andamento\"\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_tournaments_delete",
+      "_type": "request",
+      "parentId": "fld_tournaments",
+      "name": "Remover torneio",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/tournaments/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 5
+    },
+
+    {
+      "_id": "req_games_list",
+      "_type": "request",
+      "parentId": "fld_games",
+      "name": "Listar jogos",
+      "method": "GET",
+      "url": "{{ _.base_url }}/games",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_games_get",
+      "_type": "request",
+      "parentId": "fld_games",
+      "name": "Buscar jogo por ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/games/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_games_create",
+      "_type": "request",
+      "parentId": "fld_games",
+      "name": "Adicionar jogo",
+      "method": "POST",
+      "url": "{{ _.base_url }}/games",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Valorant\",\n  \"genero\": \"FPS\",\n  \"publicadora\": \"Riot Games\"\n}"
+      },
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_games_delete",
+      "_type": "request",
+      "parentId": "fld_games",
+      "name": "Remover jogo",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/games/1",
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "metaSortKey": 4
+    }
+  ]
+}
