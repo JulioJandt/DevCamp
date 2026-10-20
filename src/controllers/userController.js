@@ -3,20 +3,26 @@ export let users = [
   { id: 2, nome: 'Aspas', email: 'aspas@val.com', senha: '456' }
 ];
 
+// Remove a senha antes de enviar o usuário nas respostas
+const removerSenha = (user) => {
+  const { senha, ...resto } = user;
+  return resto;
+};
+
 // GET: Buscar todos
 export const lerUsuarios = (req, res) => {
-  res.json(users); 
+  res.json(users.map(removerSenha));
 };
 
 // GET: Buscar por ID
 export const lerUsuarioPorId = (req, res) => {
-  const id = parseInt(req.params.id); 
+  const id = parseInt(req.params.id);
   const user = users.find(u => u.id === id);
 
   if (!user) {
     return res.status(404).json({ message: 'Usuário não encontrado' });
   }
-  res.json(user);
+  res.json(removerSenha(user));
 };
 
 // POST: Criar 
@@ -39,8 +45,8 @@ export const addUsuario = (req, res) => {
     nome, nick, email, senha
   };
 
-  users.push(newUser); 
-  res.status(201).json(newUser); 
+  users.push(newUser);
+  res.status(201).json(removerSenha(newUser));
 };
 
 // PUT: Atualizar
@@ -63,7 +69,7 @@ export const attUsuario = (req, res) => {
     tipo: tipo || users[index].tipo 
   };
   
-  res.json(users[index]);
+  res.json(removerSenha(users[index]));
 };
 // DELETE: Deletar
 export const delUsuario = (req, res) => {
