@@ -6,6 +6,7 @@ import tournamentRoutes from './src/routes/tournamentRoutes.js';
 import gameRoutes from './src/routes/gameRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import { verificarToken } from './src/middlewares/authMiddleware.js';
+import { pool } from './src/config/db.js';
 
 const app = express();
 const port = 3000;
@@ -34,3 +35,8 @@ app.use('/games', gameRoutes);
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
+
+// Testa a conexão com o Postgres ao subir o servidor (apenas informativo)
+pool.query('SELECT NOW()')
+  .then(() => console.log('Conectado ao Postgres com sucesso'))
+  .catch((erro) => console.error('Falha ao conectar ao Postgres:', erro.message));

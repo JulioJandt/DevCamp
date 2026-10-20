@@ -1,53 +1,61 @@
-let games = [
-  { id: 1, nome: 'Rocket League', genero: 'Desporto/Ação', publicadora: 'Epic Games' },
-  { id: 2, nome: 'Clash of Clans', genero: 'Estratégia', publicadora: 'Supercell' },
-  { id: 3, nome: 'Counter-Strike 2', genero: 'FPS', publicadora: 'Valve' }
-];
+import { pool } from '../config/db.js';
 
 // GET: Listar todos os jogos disponíveis na plataforma
-export const lerJogos = (req, res) => {
-  res.json(games);
+export const lerJogos = async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM games ORDER BY id');
+    res.json(rows);
+  } catch (erro) {
+    res.status(500).json({ message: 'Erro ao buscar jogos' });
+  }
 };
 
 // GET: Buscar jogo por ID
-export const lerJogoPorId = (req, res) => {
-  const id = parseInt(req.params.id);
-  const game = games.find(g => g.id === id);
+export const lerJogoPorId = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { rows } = await pool.query('SELECT * FROM games WHERE id = $1', [id]);
 
-  if (!game) {
-    return res.status(404).json({ message: 'Jogo não encontrado no catálogo' });
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Jogo não encontrado no catálogo' });
+    }
+    res.json(rows[0]);
+  } catch (erro) {
+    res.status(500).json({ message: 'Erro ao buscar jogo' });
   }
-  res.json(game);
 };
 
 // POST: Adicionar um novo jogo ao catálogo (Uso exclusivo de administradores)
-export const addJogo = (req, res) => {
-  const { nome, genero, publicadora } = req.body;
+export const addJogo = async (req, res) => {
+  try {
+    const { nome, genero, publicadora } = req.body;
 
-  if (!nome) {
-    return res.status(400).json({ message: 'O nome do jogo é obrigatório!' });
+    if (!nome) {
+      return res.status(400).json({ message: 'O nome do jogo é obrigatório!' });
+    }
+
+    const { rows } = await pool.query(
+      'INSERT INTO games (nome, genero, publicadora) VALUES ($1, $2, $3) RETURNING *',
+      [nome, genero || 'Não especificado', publicadora || 'Não especificada']
+    );
+
+    res.status(201).json(rows[0]);
+  } catch (erro) {
+    res.status(500).json({ message: 'Erro ao adicionar jogo' });
   }
-
-  const newGame = {
-    id: games.length > 0 ? games[games.length - 1].id + 1 : 1,
-    nome,
-    genero: genero || 'Não especificado',
-    publicadora: publicadora || 'Não especificada'
-  };
-
-  games.push(newGame);
-  res.status(201).json(newGame);
 };
 
 // DELETE: Remover jogo do catálogo
-export const delJogo = (req, res) => {
-  const id = parseInt(req.params.id);
-  const index = games.findIndex(g => g.id === id);
+export const delJogo = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { rowCount } = await pool.query('DELETE FROM games WHERE id = $1', [id]);
 
-  if (index === -1) {
-    return res.status(404).json({ message: 'Jogo não encontrado' });
+    if (rowCount === 0) {
+      return res.status(404).json({ message: 'Jogo não encontrado' });
+    }
+    res.status(204).send();
+  } catch (erro) {
+    res.status(500).json({ message: 'Erro ao remover jogo' });
   }
-
-  games.splice(index, 1);
-  res.status(204).send();
 };
