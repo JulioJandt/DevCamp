@@ -1,0 +1,40 @@
+services:
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: devcamp_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: devcamp
+    ports:
+      - "5433:5432"
+    volumes:
+      - devcamp_db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d devcamp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # API Node.js
+  api:
+    build: .
+    container_name: devcamp_api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: adminpassword
+      DB_NAME: devcamp
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  devcamp_db_data:
